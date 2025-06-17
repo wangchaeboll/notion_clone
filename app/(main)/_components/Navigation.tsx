@@ -1,28 +1,40 @@
 import React, {ElementRef, useEffect, useRef, useState} from 'react'
-import {ChevronsLeft, MenuIcon, Plus, PlusCircle, Search, Settings, Trash} from "lucide-react";
+
 import {useMediaQuery} from "usehooks-ts";
-import {usePathname} from "next/navigation";
+import {useSearch} from "@/hooks/use-search";
+import {useSettings} from "@/hooks/use-settings";
+
+
+import {useParams, usePathname} from "next/navigation";
 import {cn} from "@/lib/utils";
-import UserItem from "@/app/(main)/_components/UserItem";
+
+import {toast} from "sonner";
+
 import {useMutation} from "convex/react";
 import {api} from "@/convex/_generated/api";
-import Item from "@/app/(main)/_components/Item";
-import {toast} from "sonner";
-import DocumentList from "@/app/(main)/_components/DocumentList";
 
+import {ChevronsLeft, MenuIcon, Plus, PlusCircle, Search, Settings, Trash} from "lucide-react";
+import UserItem from "@/app/(main)/_components/UserItem";
+import Item from "@/app/(main)/_components/Item";
+import DocumentList from "@/app/(main)/_components/DocumentList";
 import {Popover, PopoverTrigger, PopoverContent} from "@/components/ui/popover";
 import TrashBox from "@/app/(main)/_components/TrashBox";
+import Navbar from "@/app/(main)/_components/Navbar"
 
 
 
 const Navigation = () => {
     const pathname = usePathname();
+    const params = useParams();
     const isResizingRef = useRef(false);
     const sidebarRef = useRef<ElementRef<'aside'>>(null);
     const navbarRef = useRef<ElementRef<'div'>>(null);
     const [isResetting,  setResetting] = useState<boolean>(false);
     const isMobile = useMediaQuery("(max-width: 768px)")
     const [isCollapsed, setCollapsed] = useState(isMobile);
+
+    const search = useSearch()
+    const setting = useSettings()
 
     const create = useMutation(api.documents.create)
 
@@ -137,15 +149,15 @@ const Navigation = () => {
                 <div className={cn('flex-1 opacity-100 transition-opacity', isCollapsed && "opacity-0")}>
                     <div>
                         <UserItem/>
-                        <Item label={'Search'} isSearched icon={Search} onClick={():void => {}} />
-                        <Item label={'Setting'} icon={Settings} onClick={():void => {}} />
+                        <Item label={'Search'} isSearched icon={Search} onClick={search.onOpen} />
+                        <Item label={'Setting'} icon={Settings} onClick={setting.onOpen} />
                         <Item onClick={handleCreate} label={'New Page'} icon={PlusCircle}/>
                     </div>
                     <div className={"mt-4"}>
                         <DocumentList/>
                         <Item label={"Add A page"} onClick={handleCreate} icon={Plus}/>
                         <Popover>
-                            <PopoverTrigger className={"w-full mt-4"}>
+                            <PopoverTrigger className={"w-full my-4"}>
                                 <Item label={"Trash"} icon={Trash}/>
                                 <PopoverContent className={'p-0 w-72'} side={isMobile ? "bottom": "right"}>
                                     <TrashBox/>
@@ -160,9 +172,16 @@ const Navigation = () => {
             <div onClick={resetWidth} ref={navbarRef} className={cn("absolute top-0 z-[99999] w-[calc(100%-240px)]",
                 isResetting && "transition-all ease-in-out duration-150",
                 isMobile && "left-0 w-full")}>
-                    <nav className={"bg-transparent px-3 py-2 w-full"}>
-                        {isCollapsed && <MenuIcon role={'button'} className={"h-6 w-6 text-muted-foreground"}/>}
-                    </nav>
+                {!!params.documentId ? (
+                    <Navbar
+                        isCollapsed={isCollapsed}
+                        onResetWidth={resetWidth}
+                    />
+                ): (
+                <nav className={"bg-transparent px-3 py-2 w-full"}>
+                    {isCollapsed && <MenuIcon role={'button'} className={"h-6 w-6 text-muted-foreground"}/>}
+                </nav>
+                )}
             </div>
         </>
     )

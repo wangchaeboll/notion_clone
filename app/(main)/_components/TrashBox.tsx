@@ -9,9 +9,10 @@ import {Id} from "@/convex/_generated/dataModel";
 
 import {toast} from "sonner";
 
-import {Search} from "lucide-react";
+import {Search, Undo, Trash} from "lucide-react";
 import {Spinner} from "@/components/spinner";
 import {Input} from "@/components/ui/input";
+import {ConfirmModal} from "@/components/modals/confirm-modal";
 
 const TrashBox = () => {
     const router = useRouter();
@@ -83,9 +84,17 @@ const TrashBox = () => {
                         onClick={():void => onClick(doc._id)}
                         className={"text-sm rounded-sm w-full hover:bg-primary/5 flex items-center justify-between text-primary"}
                     >
-                        <span>
+                        <span className={'truncate pl-2'}>
                             {doc.title}
                         </span>
+                        <div className="flex items-center">
+                            <div className={"rounded-sm p-2 hover:bg-neutral-200"} role={'button'} onClick={(e) => onRestore(e, doc._id)}>
+                                <Undo className={'h-4 w-4 text-muted-foreground'}/>
+                            </div>
+                            <ConfirmModal onAction={() => onRemove(doc._id)}>
+                            <div className={"rounded-sm p-2 hover:bg-neutral-200"} role={'button'} ><Trash className={"h-4 w-4 text-muted-foreground"}/></div>
+                            </ConfirmModal>
+                        </div>
                     </div>
                 ))}
             </div>
