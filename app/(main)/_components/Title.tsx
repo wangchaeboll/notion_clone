@@ -45,7 +45,7 @@ const Title = ( { initialData }: TitleProps) => {
         <div className={"flex items-center gap-x-1"}>
             {!!initialData.icon && <p>{initialData.icon}</p> }
             {isEditing ?
-                (<Input ref={inputRef} value={title} onClick={enableInput} onBlur={disableInput} onChange={onChange} onKeyDown={onKeyDown} className={"h-7 px-2 !ring-0 !outline-none focus-visible:!ring-0 !focus-visible:!outline-none"} /> )
+                (<Input ref={inputRef} value={title} onClick={enableInput} onBlur={disableInput} onChange={onChange} onKeyDown={onKeyDown} className={"h-7 px-2 focus-visible:ring-transparent focus-visible:border-none"} /> )
                 :
                 ( <Button onClick={enableInput} variant={"ghost"} className={"font-normal h-auto p-1"} size={"sm"} ><span className={"truncate"}>{initialData?.title}</span></Button>)}
         </div>
