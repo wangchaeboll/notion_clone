@@ -6,6 +6,8 @@ import {useParams} from "next/navigation";
 import {Id} from "@/convex/_generated/dataModel";
 import { MenuIcon } from 'lucide-react';
 import Title from "@/app/(main)/_components/Title";
+import Banner from "@/app/(main)/_components/Banner";
+import Menu from "@/app/(main)/_components/Menu";
 
 interface NavbarProps {
     isCollapsed: boolean,
@@ -20,8 +22,11 @@ const Navbar = ( {isCollapsed, onResetWidth}: NavbarProps) => {
 
     if( getDoc === undefined ){
         return (
-            <nav className={"bg-background px-3 py-2 w-full flex items-center"}>
+            <nav className={"bg-background px-3 py-2 w-full flex items-center justify-between"}>
                 <Title.Skeleton/>
+                <div className="flex items-center gap-x-2">
+                    <Menu.Skeleton/>
+                </div>
             </nav>
         )
     }
@@ -34,8 +39,14 @@ const Navbar = ( {isCollapsed, onResetWidth}: NavbarProps) => {
                 )}
                 <div className={"flex items-center justify-between w-full"}>
                     <Title initialData={getDoc} />
+                    <div className={"flex items-center gap-x-2"}>
+                        <Menu docId={getDoc._id}/>
+                    </div>
                 </div>
             </nav>
+            {getDoc.isArchived && (
+                <Banner docId={getDoc._id} />
+            )}
         </>
     )
 }

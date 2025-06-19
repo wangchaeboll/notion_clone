@@ -27,7 +27,7 @@ const TrashBox = () => {
     })
 
     const onClick = (documentId : Id<"documents">) => {
-        router.push(`documents/${documentId}`)
+        router.push(`/documents/${documentId}`)
     }
 
     const onRestore = async (e: React.MouseEvent<HTMLElement, MouseEvent>,documentId:Id<"documents">) => {
