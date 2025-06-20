@@ -82,7 +82,7 @@ const TrashBox = () => {
                         key={doc._id}
                         role={"button"}
                         onClick={():void => onClick(doc._id)}
-                        className={"text-sm rounded-sm w-full hover:bg-primary/5 flex items-center justify-between text-primary"}
+                        className={"text-sm rounded-sm w-full cursor-pointer hover:bg-primary/5 flex items-center justify-between text-primary"}
                     >
                         <span className={'truncate pl-2'}>
                             {doc.title}

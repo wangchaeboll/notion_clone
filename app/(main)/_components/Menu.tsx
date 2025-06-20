@@ -45,8 +45,8 @@ const Menu = ({ docId }:MenuProps) => {
                     <MoreHorizontal className={"h-4 w-4"}/>
                 </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className={"w-60"} align={"end"} alignOffset={8} forceMount>
-                <DropdownMenuItem>
+            <DropdownMenuContent className={"w-60 z-[99999]"} align={"end"} alignOffset={8} forceMount>
+                <DropdownMenuItem className={"cursor-pointer"}>
                     <Trash className={"h-4 w-4 mr-2"}/> Delete
                 </DropdownMenuItem>
                 <DropdownMenuSeparator/>
