@@ -1,19 +1,20 @@
 "use client"
-import React from 'react'
+import React, { use } from 'react'
 import {Id} from "@/convex/_generated/dataModel";
 import {useQuery} from "convex/react";
 import {api} from "@/convex/_generated/api";
 import Toolbar from "@/components/Toolbar";
 
 interface DocumentIdPageProps {
-    params: {
+    params: Promise<{
         documentId: Id<"documents">
-    }
+    }>
 }
 
 const DocumentIdPage = ( { params }:DocumentIdPageProps) => {
+    const { documentId } = use(params);
     const doc = useQuery(api.documents.getById, {
-        documentId: params.documentId
+        documentId: documentId
     })
 
     if (doc === undefined) {

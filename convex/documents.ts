@@ -219,7 +219,7 @@ export const getById = query({
 
         if(!doc) throw new Error("Not Found.");
 
-        // this is the line that make things work for non user to look at it
+        // this is the line that make things work for non-user to look at it
         if(doc.isPublished && !doc.isArchived) return doc
 
         if(!identity) throw new Error("Not Authenticated")
@@ -250,5 +250,28 @@ export const update = mutation({
         if(doc.userId !== userId ) throw new Error("Unauthorized")
 
         return await ctx.db.patch(args.id , { ...rest})
+    }
+})
+
+export const removeIcon = mutation({
+    args: { id: v.id("documents")},
+    handler: async (ctx, args) => {
+        const identity = await ctx.auth.getUserIdentity()
+
+        if(!identity) throw new Error("Unauthenticated")
+
+        const userId = identity.subject;
+
+        const doc = await ctx.db.get(args.id)
+
+        if(!doc) throw new Error("Not Found!")
+
+        if(doc.userId !== userId) {
+            throw new Error("Unauthorized")
+        }
+
+        return await ctx.db.patch(args.id, {
+            icon: undefined
+        })
     }
 })
