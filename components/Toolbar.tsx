@@ -7,8 +7,8 @@ import {ImageIcon, Smile, X} from "lucide-react";
 import {useMutation} from "convex/react";
 import TextAreaAutosize from "react-textarea-autosize"
 import {api} from "@/convex/_generated/api";
-import {removeIcon} from "@/convex/documents";
 import {useCoverImage} from "@/hooks/use-cover-image";
+import {toast} from "sonner";
 
 interface ToolbarProps {
     initialData: Doc<"documents">;
@@ -50,15 +50,28 @@ const Toolbar = ({initialData, preview}: ToolbarProps) => {
     }
 
     const onSelect = (icon: string ) => {
-        update({
+        const promise = update({
             id: initialData._id,
             icon
         })
+
+        toast.promise(promise, {
+            loading: "Adding Icon",
+            success: "Icon Added",
+            error: "Failed to add Icon",
+        })
+
     }
 
     const onRemoveIcon = () => {
-        removeIcon({
+        const promise = removeIcon({
             id: initialData._id
+        })
+
+        toast.promise(promise, {
+            loading: "Removing Icon",
+            success: "Icon removed",
+            error: "Failed to remove Icon",
         })
     }
 
