@@ -1,7 +1,7 @@
 "use client"
 import React from 'react'
 
-import EmojiPicker, { Theme } from "emoji-picker-react";
+import EmojiPicker from "emoji-picker-react";
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
 
 interface IconPickerProps {
@@ -10,11 +10,11 @@ interface IconPickerProps {
     asChild?: boolean;
 }
 
-const IconPicker = ({ onChange, children, asChild}: IconPickerProps) => {
+const IconPicker = ({ onChange, children}: IconPickerProps) => {
 
     return (
         <Popover>
-            <PopoverTrigger>
+            <PopoverTrigger asChild>
                 {children}
             </PopoverTrigger>
             <PopoverContent className={"p-0 w-full border-none shadow-none"}>

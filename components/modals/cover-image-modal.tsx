@@ -2,12 +2,15 @@
 import React from 'react'
 import {useCoverImage} from "@/hooks/use-cover-image";
 import {Dialog, DialogContent, DialogHeader, DialogTitle} from "@/components/ui/dialog";
-import { SingleImageDropzone} from "@/components/upload/single-image";
+import { SingleImageDropzone } from "@/components/upload/single-image";
 import {useEdgeStore} from "@/lib/edgestore";
 import {useMutation} from "convex/react";
 import {api} from "@/convex/_generated/api";
 import {useParams} from "next/navigation";
 import {Id} from "@/convex/_generated/dataModel";
+import {UploaderProvider, type UploadFn} from "@/components/upload/uploader-provider";
+import SingleImage from "@/components/edgestoreCom/SingleImage";
+import Drop from "@/components/edgestoreCom/Drop";
 
 const CoverImageModal = () => {
     const params = useParams()
@@ -24,24 +27,48 @@ const CoverImageModal = () => {
         coverImage.onClose
     }
 
-    const onChange = async (file?: File){
-        if(file){
+    // const onChange:UploadFn = async (file?: File) => {
+    //     if (file) {
+    //         setIsSubmitting(true);
+    //         setFile(file);
+    //
+    //         const res = await edgestore.publicFiles.upload({
+    //             file
+    //         });
+    //
+    //         await update({
+    //             id: params.documentId as Id<"documents">,
+    //             coverImage: res.url
+    //         });
+    //
+    //         onClose();
+    //     }
+    // };
+
+    const uploadFn: UploadFn = React.useCallback(
+        async ({ file, onProgressChange, signal }) => {
             setIsSubmitting(true);
-            setFile(file)
+            setFile(file);
 
             const res = await edgestore.publicFiles.upload({
-                file
-            })
-
+                file,
+                signal,
+                onProgressChange,
+            });
+            // you can run some server action or api here
             await update({
                 id: params.documentId as Id<"documents">,
                 coverImage: res.url
-            })
+            });
+            // to add the necessary data to your database
+            onClose();
+            return res;
+        },
+        [edgestore],
+    );
 
-            onClose()
-        }
-    }
 
+    // @ts-ignore
     return (
         <Dialog open={coverImage.isOpen} onOpenChange={coverImage.onClose}>
             <DialogContent>
@@ -50,7 +77,11 @@ const CoverImageModal = () => {
                             Cover Image
                     </DialogTitle>
                 </DialogHeader>
-                <SingleImageDropzone className={"w-full outline-none"} disabled={isSubmiting} value={file} onChange={onChange}/>
+                <UploaderProvider uploadFn={uploadFn} autoUpload>
+                    {/*<SingleImage/>*/}
+                    <Drop/>
+                </UploaderProvider>
+                {/*<SingleImageDropzone className={"w-full outline-none"} disabled={isSubmiting} value={file} onChange={onChange}/>*/}
             </DialogContent>
         </Dialog>
     )
