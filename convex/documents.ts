@@ -190,7 +190,7 @@ export const remove = mutation({
 
         if(!existingDoc){ throw new Error("Not found")}
 
-        if(existingDoc.userId ! === userId) { throw new Error("Unauthorized")}
+        if(existingDoc.userId !== userId) { throw new Error("Unauthorized")}
 
         return await ctx.db.delete(args.id)
     }

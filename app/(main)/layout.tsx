@@ -21,7 +21,8 @@ const MainLayout = ({children}: Readonly<{ children: React.ReactNode; }>) => {
     return (
         <div className={'h-full flex'}>
             <Navigation/>
-            <main className={'flex-1 h-full overflow-y-auto'}>
+
+            <main className={'flex-1 h-full overflow-y-scroll mt-6'}>
                 <SearchCommand />
                 {children}
             </main>

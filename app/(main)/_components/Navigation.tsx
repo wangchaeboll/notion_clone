@@ -5,7 +5,7 @@ import {useSearch} from "@/hooks/use-search";
 import {useSettings} from "@/hooks/use-settings";
 
 
-import {useParams, usePathname} from "next/navigation";
+import {useParams, usePathname, useRouter} from "next/navigation";
 import {cn} from "@/lib/utils";
 
 import {toast} from "sonner";
@@ -26,6 +26,7 @@ import Navbar from "@/app/(main)/_components/Navbar"
 const Navigation = () => {
     const pathname = usePathname();
     const params = useParams();
+    const router = useRouter();
     const isResizingRef = useRef(false);
     const sidebarRef = useRef<ElementRef<'aside'>>(null);
     const navbarRef = useRef<ElementRef<'div'>>(null);
@@ -122,7 +123,10 @@ const Navigation = () => {
     const handleCreate = () => {
         const promise = create({
             title: 'Untitled'
-        });
+        }).then((thisshitisdocumemtIdsowheneverucreatesomethingupdateorremovethisshitwillreturnthedocId) =>
+            router.push(`/documents/${thisshitisdocumemtIdsowheneverucreatesomethingupdateorremovethisshitwillreturnthedocId}`));
+
+        // console.log(promise) dont return value because no await REMEMBER!!
 
         toast.promise(promise, {
             loading: 'Creating a new note',
@@ -134,7 +138,7 @@ const Navigation = () => {
     return (
         <>
             <aside ref={sidebarRef}
-                className={cn('group/sidebar h-full bg-secondary overflow-y-auto relative flex w-60 flex-col z-[99999]',
+                className={cn('group/sidebar h-full bg-secondary overflow-y-auto overflow-x-hidden relative flex w-60 flex-col z-[99999]',
                 isResizingRef && "transition-all ease-in-out duration-300",
                 isMobile && "w-0")}
             >
@@ -170,18 +174,19 @@ const Navigation = () => {
                 <div onMouseDown={handleMouseDown} onClick={resetWidth} className={'opacity-0 group-hover/sidebar:opacity-100 transition cursor-ew-resize absolute h-full w-1 bg-primary/10 right-0 top-0'}/>
             </aside>
             <div onClick={resetWidth} ref={navbarRef} className={cn("absolute top-0 z-[99999] w-[calc(100%-240px)]",
-            isResetting && "transition-all ease-in-out duration-150", isMobile && "left-0 w-full")}>
+                isResetting && "transition-all ease-in-out duration-150", isMobile && "left-0 w-full")}>
                 {!!params.documentId ? (
                     <Navbar
                         isCollapsed={isCollapsed}
                         onResetWidth={resetWidth}
                     />
                 ): (
-                <nav className={"bg-transparent px-3 py-2 w-full"}>
-                    {isCollapsed && <MenuIcon role={'button'} className={"h-6 w-6 text-muted-foreground"}/>}
-                </nav>
+                    <nav className={"bg-transparent px-3 py-2 w-full"}>
+                        {isCollapsed && <MenuIcon role={'button'} className={"h-6 w-6 text-muted-foreground"}/>}
+                    </nav>
                 )}
             </div>
+
         </>
     )
 }

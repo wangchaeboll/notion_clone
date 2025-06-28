@@ -6,7 +6,7 @@ import {useParams} from "next/navigation";
 import {Id} from "@/convex/_generated/dataModel";
 import { MenuIcon } from 'lucide-react';
 import Title from "@/app/(main)/_components/Title";
-import Banner from "@/app/(main)/_components/Banner";
+import Banner from "@/app/(main)/_components/BannerDelete";
 import Menu from "@/app/(main)/_components/Menu";
 
 interface NavbarProps {

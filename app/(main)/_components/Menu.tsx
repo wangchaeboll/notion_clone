@@ -28,14 +28,13 @@ const Menu = ({ docId }:MenuProps) => {
     const archive = useMutation(api.documents.archive)
 
     const onArchive = () => {
-        const promise = archive({ id: docId})
+        const promise = archive({ id: docId })
 
         toast.promise(promise, {
             success: "Note move to trash!",
             loading: "Moving to trash..",
             error: "Failed to archive note!",
         })
-        router.push("/documents")
     }
 
     return (
@@ -46,7 +45,7 @@ const Menu = ({ docId }:MenuProps) => {
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className={"w-60 z-[99999]"} align={"end"} alignOffset={8} forceMount>
-                <DropdownMenuItem className={"cursor-pointer"}>
+                <DropdownMenuItem className={"cursor-pointer"} onClick={onArchive}>
                     <Trash className={"h-4 w-4 mr-2"}/> Delete
                 </DropdownMenuItem>
                 <DropdownMenuSeparator/>

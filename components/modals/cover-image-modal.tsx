@@ -8,9 +8,11 @@ import {useMutation} from "convex/react";
 import {api} from "@/convex/_generated/api";
 import {useParams} from "next/navigation";
 import {Id} from "@/convex/_generated/dataModel";
-import {UploaderProvider, type UploadFn} from "@/components/upload/uploader-provider";
+import {UploaderProvider, type UploadFn, useUploader} from "@/components/upload/uploader-provider";
 import SingleImage from "@/components/edgestoreCom/SingleImage";
 import Drop from "@/components/edgestoreCom/Drop";
+import MultiImage from "@/components/edgestoreCom/MultiImage";
+import MultiFile from "@/components/edgestoreCom/MultiFile";
 
 const CoverImageModal = () => {
     const params = useParams()
@@ -21,29 +23,6 @@ const CoverImageModal = () => {
 
     const update = useMutation(api.documents.update)
 
-    const onClose = () => {
-        setFile(undefined);
-        setIsSubmitting(false);
-        coverImage.onClose
-    }
-
-    // const onChange:UploadFn = async (file?: File) => {
-    //     if (file) {
-    //         setIsSubmitting(true);
-    //         setFile(file);
-    //
-    //         const res = await edgestore.publicFiles.upload({
-    //             file
-    //         });
-    //
-    //         await update({
-    //             id: params.documentId as Id<"documents">,
-    //             coverImage: res.url
-    //         });
-    //
-    //         onClose();
-    //     }
-    // };
 
     const uploadFn: UploadFn = React.useCallback(
         async ({ file, onProgressChange, signal }) => {
@@ -54,6 +33,9 @@ const CoverImageModal = () => {
                 file,
                 signal,
                 onProgressChange,
+                options: {
+                    replaceTargetUrl: coverImage.url,
+                },
             });
             // you can run some server action or api here
             await update({
@@ -61,11 +43,16 @@ const CoverImageModal = () => {
                 coverImage: res.url
             });
             // to add the necessary data to your database
-            onClose();
             return res;
         },
         [edgestore],
     );
+
+    const onClose = () => {
+        setFile(undefined);
+        setIsSubmitting(false);
+        coverImage.onClose()
+    }
 
 
     // @ts-ignore
@@ -77,9 +64,11 @@ const CoverImageModal = () => {
                             Cover Image
                     </DialogTitle>
                 </DialogHeader>
-                <UploaderProvider uploadFn={uploadFn} autoUpload>
-                    {/*<SingleImage/>*/}
-                    <Drop/>
+                <UploaderProvider uploadFn={uploadFn} autoUpload onUploadCompleted={onClose}>
+                    <SingleImage/>
+                    {/*<MultiImage/>*/}
+                    {/*<MultiFile/>*/}
+                    {/*<Drop/>*/}
                 </UploaderProvider>
                 {/*<SingleImageDropzone className={"w-full outline-none"} disabled={isSubmiting} value={file} onChange={onChange}/>*/}
             </DialogContent>

@@ -12,12 +12,12 @@ interface BannerProps {
     docId: Id<"documents">;
 }
 
-const Banner = ({ docId }:BannerProps) => {
+const BannerDelete = ({ docId }:BannerProps) => {
     const router = useRouter();
     const remove = useMutation(api.documents.remove);
     const restore = useMutation(api.documents.restore);
     const onRemove = () => {
-        const promise = remove({ id: docId})
+        const promise = remove({ id: docId}).then(doc => console.log(doc));
 
         toast.promise(promise, {
             loading: "Deleting note...",
@@ -46,4 +46,4 @@ const Banner = ({ docId }:BannerProps) => {
         </div>
     )
 }
-export default Banner
+export default BannerDelete
