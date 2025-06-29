@@ -3,8 +3,7 @@ import { v } from "convex/values";
 import { mutation, query } from "./_generated/server"
 import { Doc, Id } from "./_generated/dataModel"
 
-export const archive = mutation(
-    {
+export const archive = mutation({
         args: {id: v.id('documents')},
         handler: async (ctx, args) => {
             const identity = await ctx.auth.getUserIdentity()
@@ -49,8 +48,7 @@ export const archive = mutation(
 
             return doc
         }
-    }
-)
+    })
 
 export const getSidebar = query({
     args : {
@@ -79,8 +77,7 @@ export const getSidebar = query({
     }
 })
 
-export const create = mutation(
-    {
+export const create = mutation({
         args: {
             title: v.string(),
             parentDoc: v.optional(v.id('documents'))
@@ -102,8 +99,7 @@ export const create = mutation(
                 isPublished: false
             })
         }
-    }
-)
+    })
 
 export const getTrash = query({
     handler:  async (ctx) => {
@@ -140,7 +136,6 @@ export const restore = mutation({
 
         if(!existingDoc){ throw new Error("Not found")}
 
-        console.log(existingDoc.userId , userId)
         if(existingDoc.userId !== userId) { throw new Error("Unauthorized")}
 
         const options : Partial<Doc<"documents">> = {
@@ -180,15 +175,16 @@ export const restore = mutation({
 export const remove = mutation({
     args: { id : v.id("documents")},
     handler : async (ctx, args) => {
-        const identity =await  ctx.auth.getUserIdentity()
+        const identity = await  ctx.auth.getUserIdentity()
 
         if(!identity) throw new Error("Not Authenticated")
 
         const userId = identity.subject
-
+        console.log(args.id)
         const existingDoc = await ctx.db.get(args.id)
-
-        if(!existingDoc){ throw new Error("Not found")}
+        console.log(existingDoc)
+        if(existingDoc) console.log("ade je")
+        if(!existingDoc) throw new Error("Not found")
 
         if(existingDoc.userId !== userId) { throw new Error("Unauthorized")}
 
@@ -217,7 +213,8 @@ export const getById = query({
 
         const doc = await ctx.db.get(args.documentId)
 
-        if(!doc) throw new Error("Not Found.");
+        // if(!doc) throw new Error("Not Found.");
+        if (!doc) return null
 
         // this is the line that make things work for non-user to look at it
         if(doc.isPublished && !doc.isArchived) return doc

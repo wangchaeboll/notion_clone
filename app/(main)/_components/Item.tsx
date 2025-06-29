@@ -16,6 +16,7 @@ import {
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import {useUser} from "@clerk/clerk-react";
+import {useRouter} from "next/navigation";
 
 interface itemProps{
     id?: Id<"documents">;
@@ -32,6 +33,7 @@ interface itemProps{
 
 const Item = ({ id, documentIcon, active, level = 0 , onExpand, expanded, isSearched, label, onClick, icon : Icon } :itemProps) => {
     const { user } = useUser();
+    const router = useRouter()
     const create = useMutation(api.documents.create)
     const archive = useMutation(api.documents.archive)
 
@@ -58,33 +60,35 @@ const Item = ({ id, documentIcon, active, level = 0 , onExpand, expanded, isSear
     }
 
 
-    const onCreate = async (event: React.MouseEvent<HTMLDivElement, MouseEvent>):Promise<void> => {
+    const onCreate = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         event.stopPropagation();
         if(!id) return
 
-        // const promise = create({ title: "Untitled", parentDoc: id}).then((documentId):void => {
-        //     if(!expanded){
-        //         onExpand?.()
-        //     }
-        // }).then((documentId) => router.push(`/documents/${documentId}`))
-        const toastId = toast.loading('Creating a new note')
-        try{
-            const documentId = await create({ title: "Untitled", parentDoc: id})
+        const promise = create({ title: "Untitled", parentDoc: id}).then((documentId) =>{
             if(!expanded){
                 onExpand?.()
-             }
-            toast.success('Note created successfully', {id: toastId})
-            // await router.push(`/documents/${documentId}`)
-        }catch(e){
-            toast.error('Failed to create a new note', {id: toastId})
-            throw new Error('Error at creating note in sidebar')
-        }
+            }
+            router.push(`/documents/${documentId}`)
+            // console.log(documentId)
+        })
+        // const toastId = toast.loading('Creating a new note')
+        // try{
+        //     const documentId = await create({ title: "Untitled", parentDoc: id})
+        //     if(!expanded){
+        //         onExpand?.()
+        //      }
+        //     toast.success('Note created successfully', {id: toastId})
+        //     await router.push(`/documents/${documentId}`)
+        // }catch(e){
+        //     toast.error('Failed to create a new note', {id: toastId})
+        //     throw new Error('Error at creating note in sidebar')
+        // }
 
-        // toast.promise(promise, {
-        //     loading: 'Creating a new note',
-        //     success: 'Note created successfully',
-        //     error: 'Failed to create a new note'
-        // })
+        toast.promise(promise, {
+            loading: 'Creating a new note',
+            success: 'Note created successfully',
+            error: 'Failed to create a new note sini'
+        })
     }
 
     const ChevronIcon = expanded ? ChevronDown : ChevronRight;
@@ -100,7 +104,7 @@ const Item = ({ id, documentIcon, active, level = 0 , onExpand, expanded, isSear
                 </div>
             )}
             {/*reusing for DOCUMENT_ICON*/}
-            {documentIcon ? (<div className={"mr-2 text-[18px] shrink-0"}>{documentIcon}</div>) : (<Icon className={'mr-2 h-[18px] shrink-0 text-muted-foreground'}/>) }
+            {documentIcon ? (<div className={"mr- text-[18px] shrink-0"}>{documentIcon}</div>) : (<Icon className={'mr-2 h-[18px] w-[18px] shrink-0 text-muted-foreground'}/>) }
             <span className={'truncate'}>
                 {label}
             </span>

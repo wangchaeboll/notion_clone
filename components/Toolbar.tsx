@@ -80,7 +80,7 @@ const Toolbar = ({initialData, preview}: ToolbarProps) => {
             {!!initialData.icon && !preview && (
                 <div className={"flex items-center gap-x-2 group/icon pt-6"}>
                     <IconPicker onChange={onSelect}>
-                        <p className={"text-6xl hover:opacity-75 transition"}>
+                        <p className={"text-5xl hover:opacity-75 transition cursor-pointer"}>
                             {initialData.icon}
                         </p>
                     </IconPicker>
@@ -112,7 +112,7 @@ const Toolbar = ({initialData, preview}: ToolbarProps) => {
             {isEditing && !preview ? (
                 <TextAreaAutosize ref={inputRef} onBlur={disableInput} onKeyDown={onKeyDown} value={value} onChange={(e) => onInput(e.target.value)} className={"text-5xl w-full bg-transparent font-bold break-words outline-none text-[#3F3F3F] resize-none"}/>
             ):(
-                <div className={"pb-[11.5px] text-5xl font-bold break-words outline-none text-[#3F3F3F]"} onClick={enableInput} >
+                <div className={"text-5xl pb-[14px] font-bold break-words outline-none text-[#3F3F3F]"} onClick={enableInput} >
                     {initialData.title}
                 </div>
             )}

@@ -19,8 +19,8 @@ interface DocumentIdPageProps {
 const DocumentIdPage = ( { params }:DocumentIdPageProps) => {
     const { documentId } = use(params);
     const Editor = useMemo(() =>
-        dynamic(() =>
-            import("@/components/EditorNew"), {ssr: false}) ,
+            dynamic(() =>
+                import("@/components/EditorNew"), {ssr: false}) ,
         [])
     const doc = useQuery(api.documents.getById, {
         documentId: documentId
@@ -61,11 +61,11 @@ const DocumentIdPage = ( { params }:DocumentIdPageProps) => {
 
     return (
         <div className={"pb-40"}>
-            <Cover url={doc.coverImage}/>
+            <Cover preview url={doc.coverImage}/>
             <div className={"md:max-w-3xl lg:max-w-4xl mx-auto"}>
-                <Toolbar initialData={doc}/>
+                <Toolbar preview initialData={doc}/>
                 {/*<EditorCodeWIthAntonio onChange={onChange} initialContent={doc.content} editable/>*/}
-                <EditorNew onChange={onChange} initialContent={doc.content}/>
+                <EditorNew editable={false} onChange={onChange} initialContent={doc.content}/>
                 {/*<TestingEditor/>*/}
             </div>
         </div>

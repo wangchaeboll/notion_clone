@@ -1,7 +1,7 @@
 "use client"
 import React from 'react'
 import { Id } from "@/convex/_generated/dataModel";
-import {useRouter} from "next/navigation";
+import {redirect, useParams, useRouter} from "next/navigation";
 import {useMutation} from "convex/react";
 import {api} from "@/convex/_generated/api";
 import {toast} from "sonner";
@@ -16,19 +16,20 @@ const BannerDelete = ({ docId }:BannerProps) => {
     const router = useRouter();
     const remove = useMutation(api.documents.remove);
     const restore = useMutation(api.documents.restore);
-    const onRemove = () => {
-        const promise = remove({ id: docId}).then(doc => console.log(doc));
+
+    console.log(docId)
+    const onRemove = async () => {
+        const promise = remove({ id: docId })
+            .then(() => router.push("/documents"))
 
         toast.promise(promise, {
             loading: "Deleting note...",
             success: "Note deleted!",
             error: "Failed to delete note."
         })
-
-        router.push("/documents")
     }
     const onRestore = () => {
-        const promise = restore({ id: docId})
+        const promise = restore({ id: docId })
 
         toast.promise(promise, {
             loading: "Restoring note...",

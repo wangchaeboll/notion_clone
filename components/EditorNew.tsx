@@ -13,7 +13,7 @@ interface EditorProps {
     editable?: boolean;
 }
 
-const EditorOld = ({onChange, initialContent, editable}: EditorProps) => {
+const EditorNew = ({onChange, initialContent, editable}: EditorProps) => {
     const [block, setBlock] = React.useState<Block[]>([]);
     const locale = en;
     const { edgestore } = useEdgeStore();
@@ -51,4 +51,4 @@ const EditorOld = ({onChange, initialContent, editable}: EditorProps) => {
         </div>
     )
 }
-export default EditorOld
+export default EditorNew

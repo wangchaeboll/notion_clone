@@ -160,6 +160,7 @@ const Navigation = () => {
                     <div className={"mt-4"}>
                         <DocumentList/>
                         <Item label={"Add A page"} onClick={handleCreate} icon={Plus}/>
+
                         <Popover>
                             <PopoverTrigger className={"w-full my-4"}>
                                 <Item label={"Trash"} icon={Trash}/>
